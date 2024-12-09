@@ -1,0 +1,18 @@
+name: Build Arch Linux Package
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Arch Linux environment
+        uses: actions/setup-docker@v3
+        with:
+          docker-image: archlinux
+      - name: Build the package
+        run: |
+          docker run --rm -it -v "${GITHUB_WORKSPACE}:/src" archlinux /bin/bash -c "cd /src && makepkg -si --noconfirm"
