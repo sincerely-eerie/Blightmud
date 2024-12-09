@@ -16,4 +16,5 @@ jobs:
           docker buildx build --platform linux/x86_64 --tag blightmud-builder . -f Dockerfile
       - name: Build the Package
         run: |
-          docker run --rm -it --mount type=bind,source=$(pwd),target=/src blightmud-builder /bin/bash -c "cd /src && makepkg -si --noconfirm"
+          docker run --rm -it --mount type=bind,source=$(pwd),target=/src -e MAKEFLAGS=-j$(nproc) blightmud-builder /bin/bash -c "cd /src && makepkg -si --noconfirm"
+
