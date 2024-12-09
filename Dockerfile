@@ -8,8 +8,7 @@ RUN pacman -Syu --noconfirm
 RUN pacman -S --noconfirm \
     base-devel \
     rust \
-    cargo \
-    makepkg
+    cargo
 
 # Set the working directory
 WORKDIR /src
