@@ -1,18 +1,19 @@
-name: Build Arch Linux Package
+name: Build Blightmud Package
 
 on:
   push:
     branches: [dev]
 
 jobs:
-  build:
+  build-blightmud:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Arch Linux environment
-        uses: actions/setup-docker@v3
-        with:
-          docker-image: archlinux
-      - name: Build the package
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build the Docker Image
         run: |
-          docker run --rm -it -v "${GITHUB_WORKSPACE}:/src" archlinux /bin/bash -c "cd /src && makepkg -si --noconfirm"
+          docker buildx build --platform linux/x86_64 --tag blightmud-builder . -f Dockerfile
+      - name: Build the Package
+        run: |
+          docker run --rm -it --mount type=bind,source=$(pwd),target=/src blightmud-builder /bin/bash -c "cd /src && makepkg -si --noconfirm"
